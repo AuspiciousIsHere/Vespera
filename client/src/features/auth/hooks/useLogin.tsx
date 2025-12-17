@@ -16,7 +16,6 @@ export function useLogin() {
     mutationKey: ["login-user"],
     mutationFn: loginUser,
     onSuccess: (data) => {
-      console.log(data);
       toast.success("Login successfull");
       zustandLogin(data);
       navigate("/");

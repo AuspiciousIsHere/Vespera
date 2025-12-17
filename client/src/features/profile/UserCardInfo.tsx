@@ -1,0 +1,87 @@
+import { Calendar, Camera, Mail, MapPin, UserRound } from "lucide-react";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { Input } from "@/components/ui/input";
+
+import { useAuthStore } from "@/store/authStore";
+import { useRef, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+
+import { useForm } from "react-hook-form";
+import type { UpdateUserProfileFormInputs } from "@/types/user";
+
+export default function UserCardInfo() {
+  const [userPicture, setUserPicture] = useState<string | undefined>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const user = useAuthStore((state) => state.user);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateUserProfileFormInputs>();
+
+  return (
+    <Card className="mb-10 p-6 shadow-xl relative">
+      <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-12">
+        <div className="relative w-24 h-24">
+          <Avatar className="h-24 w-24">
+            {(user?.picture && user.picture !== "default-user.png") || userPicture ? (
+              <Card className="rounded-full overflow-hidden h-full flex items-center justify-center bg-muted">
+                <AvatarImage src={userPicture || user?.picture} alt={`@${user?.username}`} />
+              </Card>
+            ) : (
+              <Card className="rounded-full h-full flex items-center justify-center bg-muted">
+                <UserRound className="w-10 h-10" />
+              </Card>
+            )}
+          </Avatar>
+
+          <Input
+            type="file"
+            id="picture"
+            className="hidden"
+            {...register("picture")}
+            onChange={(e) => (e?.target?.files ? setUserPicture(URL.createObjectURL(e.target.files[0])) : undefined)}
+            accept="image/*"
+            ref={fileInputRef}
+          />
+
+          <Button
+            size="icon"
+            // variant="outline"
+            className="absolute -right-2 -bottom-2 h-8 w-8 rounded-full"
+            onClick={() => fileInputRef.current?.click()}
+            // disabled={isUpdatingUser}
+          >
+            <Camera />
+          </Button>
+        </div>
+
+        <div className="flex-1 space-y-2">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+            <h1 className="text-2xl font-bold">John Doe</h1>
+            <Badge variant="secondary">Pro Member</Badge>
+          </div>
+          <p className="text-muted-foreground">Senior Product Designer</p>
+          <div className="text-muted-foreground flex flex-wrap gap-4 text-sm">
+            <div className="flex items-center gap-1">
+              <Mail className="size-4" />
+              john.doe@example.com
+            </div>
+            <div className="flex items-center gap-1">
+              <MapPin className="size-4" />
+              San Francisco, CA
+            </div>
+            <div className="flex items-center gap-1">
+              <Calendar className="size-4" />
+              Joined March 2023
+            </div>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
