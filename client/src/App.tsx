@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
+import { ToastContainer } from "react-toastify";
 
 import PublicAppLayout from "./ui/PublicAppLayout";
 import PageNotFound from "./ui/PageNotFound";
@@ -7,7 +8,12 @@ import AppLayout from "./ui/AppLayout";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 
-import { requireAuth } from "@/utils/authCheck"; // The new loader utility
+import CreateDesignForm from "@/features/design/CreateDesignForm";
+import DesignMainPage from "@/features/design/DesignMainPage";
+import UserProfile from "@/features/profile/UserProfile";
+import { useTheme } from "@/context/themeContext";
+import { requireAuth } from "@/utils/authCheck";
+import UserDesigns from "./features/design/UserDesigns";
 
 const router = createBrowserRouter([
   {
@@ -23,11 +29,23 @@ const router = createBrowserRouter([
     path: "/",
     element: <AppLayout />,
     loader: requireAuth,
-    children: [],
+    children: [
+      { path: "/profile/:usernameSlug", element: <UserProfile /> },
+      { path: "/design/:usernameSlug", element: <UserDesigns /> },
+      { path: "/designs", element: <DesignMainPage /> },
+      { path: "/create-design", element: <CreateDesignForm /> },
+    ],
   },
   { path: "*", element: <PageNotFound /> },
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  const { theme } = useTheme();
+
+  return (
+    <>
+      <ToastContainer theme={theme === "dark" ? "dark" : "light"} autoClose={2000} />
+      <RouterProvider router={router} />
+    </>
+  );
 }

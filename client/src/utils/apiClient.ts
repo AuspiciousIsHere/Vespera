@@ -1,15 +1,55 @@
-import { ENDPOINT } from "@/constant/constants";
+import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import axios, { AxiosError } from "axios";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+
+import { useAuthStore } from "@/store/authStore";
+import { ENDPOINT } from "@/constant/constants";
 
 // Optional: Create a centralized Axios instance
 const axiosClient = axios.create({
-  baseURL: ENDPOINT, // Set a base URL once
+  baseURL: `${ENDPOINT}/api/v1`, // Set a base URL once
   headers: {
     "Content-Type": "application/json",
     // ... potentially add Authorization header here via interceptor (see bonus)
   },
 });
+
+/**
+ * REQUEST INTERCEPTOR
+ * This runs BEFORE every request is sent to the server.
+ */
+axiosClient.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    // Access the token from your Zustand store
+    const token = useAuthStore.getState().token;
+
+    // If token exists and headers exist, attach the Authorization header
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    console.log(config);
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+/**
+ * RESPONSE INTERCEPTOR (Bonus)
+ * Useful for handling global errors like 401 Unauthorized (Token expired)
+ */
+axiosClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Logic for token expiration:
+      // e.g., Logout the user if the token is no longer valid
+      useAuthStore.getState().logout();
+    }
+    return Promise.reject(error);
+  }
+);
 
 /**
  * A generic, centralized function using Axios to handle fetching and structured errors.

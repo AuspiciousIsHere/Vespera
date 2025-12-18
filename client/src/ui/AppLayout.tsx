@@ -2,7 +2,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet, useLocation } from "react-router";
 
 import AppSidebar from "./AppSidebar";
-import Header from "./AppHeader";
+import AppHeader from "./AppHeader";
 
 export default function AppLayout() {
   const location = useLocation();
@@ -15,8 +15,11 @@ export default function AppLayout() {
         <SidebarProvider>
           {showSdiebar && <AppSidebar />}
           <SidebarInset>
-            <Header />
-            <Outlet />
+            <AppHeader />
+
+            <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+              <Outlet />
+            </div>
           </SidebarInset>
         </SidebarProvider>
       </div>

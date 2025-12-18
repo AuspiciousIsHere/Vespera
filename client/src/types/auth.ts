@@ -13,8 +13,9 @@ export interface LoginSuccessResponse {
 
 // Signup
 export interface SingupFormInputs {
+  firstName: string;
+  lastName: string;
   username: string;
-  name: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -22,7 +23,7 @@ export interface SingupFormInputs {
 
 export interface SignupSuccessResponse {
   token: string;
-  user: User;
+  data: User;
 }
 
 // Logout

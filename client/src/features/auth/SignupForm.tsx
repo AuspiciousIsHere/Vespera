@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import type { SingupFormInputs } from "@/types/auth";
 import { useSignup } from "./hooks/useSignup";
+import { Spinner } from "@/components/ui/spinner";
 
 export function SignupForm({ className, ...props }: React.ComponentProps<"div">) {
   const { handleSubmit, register } = useForm<SingupFormInputs>();
@@ -15,18 +16,23 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="w-2xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Create your account</CardTitle>
+          <CardTitle className="text-xl text-start">Create your account</CardTitle>
           {/* <CardDescription>Enter your email below to create your account</CardDescription> */}
         </CardHeader>
 
         <CardContent>
           <form onSubmit={handleSubmit((credentials: SingupFormInputs) => signup(credentials))}>
-            <FieldGroup>
+            <FieldGroup className="grid grid-cols-2 gap-10">
               <Field>
-                <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                <Input id="name" type="text" placeholder="John Doe" {...register("name", { required: true })} />
+                <FieldLabel htmlFor="firstName">First Name</FieldLabel>
+                <Input id="firstName" type="text" placeholder="John" {...register("firstName", { required: true })} />
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
+                <Input id="lastName" type="text" placeholder="Doe" {...register("lastName", { required: true })} />
               </Field>
 
               <Field>
@@ -40,22 +46,20 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
               </Field>
 
               <Field>
-                <Field className="grid grid-cols-2 gap-4">
-                  <Field>
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" type="password" {...register("password", { required: true })} />
-                  </Field>
-
-                  <Field>
-                    <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-                    <Input id="confirm-password" type="password" {...register("confirmPassword", { required: true })} />
-                  </Field>
-                </Field>
-                <FieldDescription>Must be at least 8 characters long.</FieldDescription>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <Input id="password" type="password" placeholder="Password" {...register("password", { required: true })} />
               </Field>
 
               <Field>
-                <Button type="submit">Create Account</Button>
+                <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
+                <Input id="confirm-password" type="password" placeholder="Confirm Password" {...register("confirmPassword", { required: true })} />
+              </Field>
+
+              <Field className="col-span-2">
+                <Button type="submit" disabled={isSigningUp}>
+                  {isSigningUp && <Spinner />}
+                  Create Account
+                </Button>
                 <FieldDescription className="text-center">
                   Already have an account? <Link to="/login">Sign in</Link>
                 </FieldDescription>
