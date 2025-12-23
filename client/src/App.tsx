@@ -1,19 +1,29 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { ToastContainer } from "react-toastify";
 
-import PublicAppLayout from "./ui/PublicAppLayout";
-import PageNotFound from "./ui/PageNotFound";
-import EntryPage from "./pages/EntryPage";
-import AppLayout from "./ui/AppLayout";
+// Auth
+import { requireAuth } from "@/utils/authCheck";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 
+// Admin
+import ManageUsers from "./features/admin/ManageUsers";
+
+// Design
+import DesignDetailsPage from "./features/design/DesignDetailsPage";
 import CreateDesignForm from "@/features/design/CreateDesignForm";
 import DesignMainPage from "@/features/design/DesignMainPage";
-import UserProfile from "@/features/profile/UserProfile";
-import { useTheme } from "@/context/themeContext";
-import { requireAuth } from "@/utils/authCheck";
 import UserDesigns from "./features/design/UserDesigns";
+
+// Profile
+import UserProfile from "@/features/profile/UserProfile";
+
+// Other
+import PublicAppLayout from "./ui/PublicAppLayout";
+import { useTheme } from "@/context/themeContext";
+import PageNotFound from "./ui/PageNotFound";
+import EntryPage from "./pages/EntryPage";
+import AppLayout from "./ui/AppLayout";
 
 const router = createBrowserRouter([
   {
@@ -31,9 +41,16 @@ const router = createBrowserRouter([
     loader: requireAuth,
     children: [
       { path: "/profile/:usernameSlug", element: <UserProfile /> },
-      { path: "/design/:usernameSlug", element: <UserDesigns /> },
-      { path: "/designs", element: <DesignMainPage /> },
+      { path: "/design/:id", element: <DesignDetailsPage /> },
+      {
+        path: "/designs",
+        children: [
+          { path: ":usernameSlug", element: <UserDesigns /> },
+          { path: "/", element: <DesignMainPage /> },
+        ],
+      },
       { path: "/create-design", element: <CreateDesignForm /> },
+      { path: "/manage-users", element: <ManageUsers /> },
     ],
   },
   { path: "*", element: <PageNotFound /> },

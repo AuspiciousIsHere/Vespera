@@ -11,8 +11,6 @@ export default function AppHeader({ showVespera = false }) {
   const { setTheme, theme } = useTheme();
   const { logout } = useLogout();
 
-  console.log(user);
-
   return (
     <div className="border-b-2 bg-background h-14 w-full flex items-center px-4">
       {showVespera && (

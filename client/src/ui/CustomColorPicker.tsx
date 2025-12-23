@@ -3,8 +3,8 @@
 import { Copy, Palette, X } from "lucide-react";
 import { useState } from "react";
 
-import { Field, FieldGroup } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
+import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "react-toastify";
@@ -105,14 +105,14 @@ export function CustomColorPicker({ value = [], onChange, label = "Pick a Color"
           {/* RGB Inputs */}
           <Field className="w-1/2">
             <Label className="text-sm">RGB</Label>
-            <FieldGroup className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <Field>
                 <Input
                   id="r"
                   type="text"
                   value={r}
                   onChange={(e) => handleRgbChange("r", e.target.value)}
-                  className="font-mono text-center"
+                  className="font-mono text-center py-1"
                   maxLength={3}
                 />
               </Field>
@@ -123,7 +123,7 @@ export function CustomColorPicker({ value = [], onChange, label = "Pick a Color"
                   type="text"
                   value={g}
                   onChange={(e) => handleRgbChange("g", e.target.value)}
-                  className="font-mono text-center"
+                  className="font-mono text-center py-1"
                   maxLength={3}
                 />
               </Field>
@@ -134,11 +134,11 @@ export function CustomColorPicker({ value = [], onChange, label = "Pick a Color"
                   type="text"
                   value={b}
                   onChange={(e) => handleRgbChange("b", e.target.value)}
-                  className="font-mono text-center"
+                  className="font-mono text-center py-1"
                   maxLength={3}
                 />
               </Field>
-            </FieldGroup>
+            </div>
           </Field>
 
           <div className="w-1/2">
@@ -154,7 +154,7 @@ export function CustomColorPicker({ value = [], onChange, label = "Pick a Color"
                   value={hex}
                   onChange={(e) => handleHexChange(e.target.value)}
                   placeholder="#FF6B6B"
-                  className="font-mono uppercase"
+                  className="font-mono uppercase py-1"
                   maxLength={7}
                 />
 
@@ -196,8 +196,8 @@ export function CustomColorPicker({ value = [], onChange, label = "Pick a Color"
                 <Button
                   type="button"
                   variant="destructive"
-                  size="icon"
-                  className="absolute -top-2 -right-2 size-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  size="icon-xs"
+                  className="absolute -top-2 -right-2 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => removeColor(color)}
                 >
                   <X className="size-4" />

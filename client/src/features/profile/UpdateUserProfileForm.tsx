@@ -50,35 +50,35 @@ export function UpdateUserProfileForm() {
             {/* 2. First Name */}
             <div className="space-y-2">
               <Label htmlFor="name">First Name</Label>
-              <Input id="firstName" {...register("firstName")} disabled={isUpdatingUser} />
+              <Input id="firstName" {...register("firstName")} disabled={isUpdatingUser} className="py-1" placeholder="Enter First Name" />
               {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName.message}</p>}
             </div>
 
             {/* 3. Last Name */}
             <div className="space-y-2">
               <Label htmlFor="name">Last Name</Label>
-              <Input id="lastName" {...register("lastName")} disabled={isUpdatingUser} />
+              <Input id="lastName" {...register("lastName")} disabled={isUpdatingUser} className="py-1" placeholder="Enter Last Name" />
               {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
             </div>
 
             {/* 4. Phone */}
             <div className="space-y-2">
               <Label htmlFor="phone">Phone Number</Label>
-              <Input id="phone" {...register("phone")} disabled={isUpdatingUser} />
+              <Input id="phone" {...register("phone")} disabled={isUpdatingUser} className="py-1" placeholder="Enter Phone" />
               {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
             </div>
 
             {/* 5. Username */}
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
-              <Input id="username" {...register("username")} disabled={isUpdatingUser} />
+              <Input id="username" {...register("username")} disabled={isUpdatingUser} className="py-1" placeholder="Enter Username" />
               {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
             </div>
 
             {/* 6. Bio */}
             <div className="space-y-2 col-span-2">
               <Label htmlFor="bio">Bio</Label>
-              <Textarea id="bio" {...register("bio")} rows={3} disabled={isUpdatingUser} />
+              <Textarea id="bio" {...register("bio")} rows={3} disabled={isUpdatingUser} className="py-1" placeholder="Enter Bio" />
               {errors.bio && <p className="text-red-500 text-sm">{errors.bio.message}</p>}
             </div>
           </div>

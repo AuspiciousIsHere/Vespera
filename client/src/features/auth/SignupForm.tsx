@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import type { SingupFormInputs } from "@/types/auth";
 import { useSignup } from "./hooks/useSignup";
 import { Spinner } from "@/components/ui/spinner";
+import { InputGroup } from "@/components/ui/input-group";
 
 export function SignupForm({ className, ...props }: React.ComponentProps<"div">) {
   const { handleSubmit, register } = useForm<SingupFormInputs>();
@@ -24,7 +25,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
 
         <CardContent>
           <form onSubmit={handleSubmit((credentials: SingupFormInputs) => signup(credentials))}>
-            <FieldGroup className="grid grid-cols-2 gap-10">
+            <InputGroup className="grid grid-cols-2 gap-10">
               <Field>
                 <FieldLabel htmlFor="firstName">First Name</FieldLabel>
                 <Input id="firstName" type="text" placeholder="John" {...register("firstName", { required: true })} />
@@ -64,7 +65,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                   Already have an account? <Link to="/login">Sign in</Link>
                 </FieldDescription>
               </Field>
-            </FieldGroup>
+            </InputGroup>
           </form>
         </CardContent>
       </Card>

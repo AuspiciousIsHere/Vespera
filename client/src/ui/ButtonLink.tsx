@@ -6,12 +6,15 @@ interface ButtonLinkPropTypes {
   to: string;
   variant?: "default" | "outline" | "ghost" | "destructive" | "secondary" | "link";
   children?: React.ReactNode;
+  className?: string;
 }
 
-export default function ButtonLink({ to, variant = "default", children }: ButtonLinkPropTypes) {
+export default function ButtonLink({ to, variant = "default", children, className }: ButtonLinkPropTypes) {
+  console.log(className);
+
   return (
-    <Button className="p-0 m-0" variant={variant}>
-      <Link to={to} className="flex items-center gap-2 h-full px-4">
+    <Button className={`${className}`} variant={variant}>
+      <Link to={to} className="flex items-center gap-2 h-full p-0 m-0">
         {children}
       </Link>
     </Button>

@@ -1,4 +1,4 @@
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useLogin } from "./hooks/useLogin";
 import type { LoginFormInputs } from "@/types/auth";
 import { Spinner } from "@/components/ui/spinner";
+import { InputGroup } from "@/components/ui/input-group";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const { handleSubmit, register } = useForm<LoginFormInputs>();
@@ -24,7 +25,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
         <CardContent>
           <form onSubmit={handleSubmit((credentials: LoginFormInputs) => login(credentials))}>
-            <FieldGroup>
+            <InputGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input id="email" type="email" placeholder="m@example.com" {...register("email", { required: true })} />
@@ -49,7 +50,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   Don&apos;t have an account? <Link to="/sign-up">Sign up</Link>
                 </FieldDescription>
               </Field>
-            </FieldGroup>
+            </InputGroup>
           </form>
         </CardContent>
       </Card>

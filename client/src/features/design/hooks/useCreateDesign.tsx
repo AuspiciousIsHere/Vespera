@@ -14,7 +14,7 @@ export function useCreateDesign() {
     mutationFn: createDesign,
     onSuccess: () => {
       toast.success("Design created successfully!");
-      navigate(`/design/${user?.usernameSlug}`);
+      navigate(`/designs/${user?.usernameSlug}`);
     },
     onError: (err) => {
       toast.error("Failed to create design. Please try again.");
