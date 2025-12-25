@@ -1,16 +1,18 @@
-import { Home, Proportions, UserRoundPen } from "lucide-react";
-import { Link } from "react-router";
+import { Home, Proportions, UserRound, UserRoundPen } from "lucide-react";
+import { NavLink, useLocation } from "react-router";
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store/authStore";
 
 export default function AppSidebar() {
   const user = useAuthStore((state) => state.user);
+  const { pathname } = useLocation();
 
   const sidebarItems = [
     { title: "Designs", url: "/designs", icon: Home },
-    { title: "My Designs", url: `/design/${user?.usernameSlug}`, icon: UserRoundPen },
+    { title: "My Designs", url: `/designs/${user?.usernameSlug}`, icon: UserRoundPen },
     { title: "Profile", url: `/profile/${user?.usernameSlug}`, icon: Proportions },
+    { title: "Manage Users", url: `/manage-users`, icon: UserRound },
   ];
 
   // const data = {
@@ -56,15 +58,15 @@ export default function AppSidebar() {
   // };
 
   return (
-    <Sidebar collapsible="offcanvas">
+    <Sidebar collapsible="offcanvas" style={{}}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="hover:bg-transparent">
             <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:p-1.5! h-full hover:bg-transparent">
-              <Link to="/">
+              <NavLink to="/">
                 <img src="../../public/vespera-logo.png" className="size-10" />
                 <span className="text-2xl font-semibold">Vespera</span>
-              </Link>
+              </NavLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -76,10 +78,10 @@ export default function AppSidebar() {
             {sidebarItems.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <Link to={item.url}>
+                  <NavLink to={item.url} className={`${pathname === item.url && "active-link"} transition-all`}>
                     <item.icon />
                     {item.title}
-                  </Link>
+                  </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}

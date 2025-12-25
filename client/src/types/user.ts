@@ -1,5 +1,6 @@
 export interface User {
   _id: string;
+  active: boolean;
   firstName: string;
   lastName: string;
   email: string;
@@ -37,7 +38,14 @@ export interface UpdateUserPasswordFormInputs {
   confirmPassword: string;
 }
 
+// Responses
 export interface UpdateUserProfileResponse {
   status: string;
   data: User;
+}
+
+export interface GetAllUsersResponse {
+  status: string;
+  total: number;
+  data: User[];
 }

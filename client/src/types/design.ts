@@ -1,9 +1,3 @@
-interface ColorDetail {
-  hex: string;
-  rgb: string;
-  hsl: string;
-}
-
 export interface DesignColorInput {
   value: string;
   format: "hex" | "rgb";
@@ -15,11 +9,12 @@ export interface Design {
   name: string;
   description: string;
   images: string[];
-  colors: ColorDetail[];
-  gradientCss: string[];
+  colors: string[];
+  gradients: string[];
   tags: string[];
   likes: number;
   rating: number;
+  ratingCount: number;
   createdAt: Date;
   updatedAt: Date;
 }

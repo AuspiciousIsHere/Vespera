@@ -80,8 +80,6 @@ export default function CreateDesignForm() {
     e.target.value = "";
   }
 
-  const selectImage = (previewUrl: string) => setSelectedPreview(previewUrl);
-
   const removeImage = (id: string) => {
     const newList = uploadedImages.filter((img) => img.id !== id);
     setUploadedImages(newList);
@@ -103,33 +101,26 @@ export default function CreateDesignForm() {
     };
   }, []);
 
-  console.log(uploadedImages);
-
   const onSubmit = async (data: DesignFormInput) => {
     // Trigger validation for all custom fields on submit
     const results = await trigger(["images", "colors"]);
     if (!results) return;
 
-    // Create FormData manually — this is the key fix!
     const formData = new FormData();
 
-    // Append text fields
     formData.append("name", data.name.trim());
     formData.append("description", data.description.trim());
 
-    // Append each image file individually (with a name like images[0], images[1]...)
     uploadedImages.forEach((image) => {
-      formData.append("images", image.file); // "images" as field name, file as value
+      formData.append("images", image.file);
     });
 
-    // Append colors as JSON string (or individual fields)
     formData.append("colors", JSON.stringify(colors));
 
-    // Append gradients (optional)
     if (gradients.length > 0) {
-      formData.append("gradientCss", JSON.stringify(gradients));
+      formData.append("gradients", JSON.stringify(gradients));
     }
-    // TODO: Send to backend here
+
     createNewDesign(formData);
   };
 
@@ -163,22 +154,25 @@ export default function CreateDesignForm() {
             {uploadedImages.map((image) => (
               <div
                 key={image.id}
-                onClick={() => selectImage(image.previewUrl)}
-                className={`relative cursor-pointer shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                onClick={() => setSelectedPreview(image.previewUrl)}
+                className={`relative cursor-pointer shrink-0 w-20 h-20 rounded-lg border-2 transition-all group ${
                   selectedPreview === image.previewUrl ? "border-primary scale-105 shadow-md" : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
-                <img src={image.previewUrl} alt="Thumb" className="w-full h-full object-cover" />
+                <div className="w-full h-full overflow-hidden rounded-lg">
+                  <img src={image.previewUrl} alt="Thumb" className="w-full h-full object-cover" />
+                </div>
                 <Button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     removeImage(image.id);
                   }}
-                  variant="ghost"
-                  className="absolute top-1 right-1 size-5 p-0"
+                  size="icon-xs"
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 size-5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <X />
+                  <X className="size-4" />
                 </Button>
               </div>
             ))}
@@ -227,7 +221,7 @@ export default function CreateDesignForm() {
         </div>
 
         {/* Button always enabled */}
-        <Button type="submit" disabled={isCreatingDesign} className="w-full h-14 text-lg font-bold">
+        <Button type="submit" disabled={isCreatingDesign} className="w-full py-7 text-lg font-bold">
           <CirclePlus className="size-6 mr-2" />
           {isSubmitting ? "Creating..." : "Create Design"}
         </Button>

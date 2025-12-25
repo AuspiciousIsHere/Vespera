@@ -5,6 +5,7 @@ import { StrictMode } from "react";
 import App from "./App.tsx";
 import "./index.css";
 import { ThemeProvider } from "./context/themeContext.tsx";
+import { ToastProvider } from "./components/ui/toast.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,7 +19,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="vespera-ui-theme">
-        <App />
+        <ToastProvider>
+          <App />
+        </ToastProvider>
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>

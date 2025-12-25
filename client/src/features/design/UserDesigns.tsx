@@ -1,30 +1,50 @@
+import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
 import useGetUserDesigns from "./hooks/useGetUserDesigns";
-import { Spinner } from "@/components/ui/spinner";
-import { useAuthStore } from "@/store/authStore";
-import ButtonLink from "@/ui/ButtonLink";
 import DesignsContainerMap from "./DesignsContainerMap";
+import { useAuthStore } from "@/store/authStore";
+import PageSpinner from "@/ui/PageSpinner";
+import { LayoutGrid, List } from "lucide-react";
+import DesignsTable from "./DesignsTable";
+import ButtonLink from "@/ui/ButtonLink";
 
 export default function UserDesigns() {
   const user = useAuthStore((state) => state.user);
-  const { isGettingUserDesigns, designs } = useGetUserDesigns(user?._id);
+  const { isPending: isGettingUserDesigns, data: designs } = useGetUserDesigns(user?._id);
 
-  if (isGettingUserDesigns)
-    return (
-      <div className="flex items-center justify-center">
-        <Spinner />
-      </div>
-    );
+  const viewTabs = [
+    { value: "grid", icon: <LayoutGrid /> },
+    { value: "list", icon: <List /> },
+  ];
+
+  if (isGettingUserDesigns) return <PageSpinner />;
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex items-center justify-between">
+    <Tabs className={"w-full"}>
+      <div className="flex items-center justify-between w-full mb-2">
         <h1 className="text-2xl font-bold">
           {designs?.total} Design{designs && designs.total > 1 && "s"}
         </h1>
-        <ButtonLink to="/create-design">New</ButtonLink>
+
+        <div className="flex items-center gap-2">
+          <TabsList>
+            {viewTabs.map((tab) => (
+              <TabsTab key={tab.value} value={tab.value}>
+                {tab.icon}
+              </TabsTab>
+            ))}
+          </TabsList>
+
+          <ButtonLink to="/create-design">New</ButtonLink>
+        </div>
       </div>
 
-      <DesignsContainerMap designs={designs} />
-    </div>
+      <TabsPanel value="grid" className="w-full">
+        <DesignsContainerMap designs={designs} />
+      </TabsPanel>
+
+      <TabsPanel value="list" className="w-full">
+        <DesignsTable designs={designs} />
+      </TabsPanel>
+    </Tabs>
   );
 }

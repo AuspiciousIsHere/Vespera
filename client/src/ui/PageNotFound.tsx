@@ -1,7 +1,5 @@
-import { Link } from "react-router";
-
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
-import { Button } from "@/components/ui/button";
+import ButtonLink from "./ButtonLink";
 
 export default function PageNotFound() {
   return (
@@ -13,17 +11,9 @@ export default function PageNotFound() {
 
       <EmptyContent>
         <EmptyDescription>
-          <Button>
-            <Link to="/">Back to Home</Link>
-          </Button>
+          <ButtonLink to="/">Back to Home</ButtonLink>
         </EmptyDescription>
       </EmptyContent>
-
-      {/* <EmptyContent>
-        <EmptyDescription>
-          Need help? <a href="#">Contact support</a>
-        </EmptyDescription>
-      </EmptyContent> */}
     </Empty>
   );
 }

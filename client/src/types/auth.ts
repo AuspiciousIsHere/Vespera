@@ -37,3 +37,23 @@ export interface ApiErrorResponse {
   status?: number;
   code?: string;
 }
+
+// Forget Password
+export interface SendEmailForgetPasswordFormInputs {
+  email: string;
+}
+export interface SendEmailForgetPasswordResponse {
+  status: string;
+}
+
+// Reset Password
+export interface ResetPasswordFormInputs {
+  password: string;
+  confirmPassword: string;
+  token: string;
+}
+
+export interface ResetPasswordResponse {
+  token: string;
+  data: User;
+}

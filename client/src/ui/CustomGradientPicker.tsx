@@ -83,15 +83,14 @@ export function CustomGradientPicker({ value = [], onChange, label = "Create Gra
       {/* Direction Selector */}
       <div className="space-y-2">
         <Label className="text-sm">Direction</Label>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {["to right", "to left", "to bottom", "to top"].map((dir) => (
             <Button
               key={dir}
               type="button"
               variant={direction === dir ? "default" : "outline"}
-              size="sm"
               onClick={() => setDirection(dir)}
-              className="text-xs"
+              className="text-xs py-3"
             >
               {dir.replace("to ", "").charAt(0).toUpperCase() + dir.replace("to ", "").slice(1)}
             </Button>
@@ -118,7 +117,7 @@ export function CustomGradientPicker({ value = [], onChange, label = "Create Gra
                   type="text"
                   value={stop.color.toUpperCase()}
                   onChange={(e) => updateStop(index, "color", e.target.value)}
-                  className="font-mono w-32"
+                  className="font-mono w-32 py-1"
                   maxLength={7}
                 />
               </div>
@@ -143,7 +142,7 @@ export function CustomGradientPicker({ value = [], onChange, label = "Create Gra
             </Button>
           </div>
         ))}
-        <Button type="button" variant="outline" onClick={addStop} className="w-full">
+        <Button type="button" variant="outline" onClick={addStop} className="w-full py-6">
           <Plus className="w-4 h-4 mr-2" />
           Add Color Stop
         </Button>
@@ -177,7 +176,7 @@ export function CustomGradientPicker({ value = [], onChange, label = "Create Gra
                 <Button
                   type="button"
                   variant="destructive"
-                  size="icon"
+                  size="icon-xs"
                   className="absolute -top-2 -right-2 size-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => removeGradient(gradient)}
                 >
