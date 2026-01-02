@@ -24,16 +24,14 @@ export default function ConfirmDeleteDesignDialog({ designID, showConfirmDeleteD
     <AlertDialog open={showConfirmDeleteDesign} onOpenChange={setShowConfirmDeleteDesign}>
       <AlertDialogPopup>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure about deleting this design?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your account and remove your data from our servers.
-          </AlertDialogDescription>
+          <AlertDialogTitle className="leading-7">Are you absolutely sure about deleting this design?</AlertDialogTitle>
+          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogClose render={<Button variant="ghost" disabled={isDeletingDesign} />}>Cancel</AlertDialogClose>
           <AlertDialogClose render={<Button variant="destructive" onClick={() => deleteDesign()} disabled={isDeletingDesign} />}>
             {isDeletingDesign && <Spinner />}
-            Delete Account
+            Delete Design
           </AlertDialogClose>
         </AlertDialogFooter>
       </AlertDialogPopup>

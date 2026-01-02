@@ -1,14 +1,14 @@
 import type { DesignFormInput, DeleteDesignResponse, DesignSuccessResponse, DesignList } from "@/types/design";
+import { DESIGN_URL } from "@/constant/constants";
 import { apiClient } from "@/utils/apiClient";
-
-const DESIGN_URL = "/designs";
 
 export const createDesign = async (data: DesignFormInput | FormData): Promise<DesignSuccessResponse> => {
   return apiClient<DesignSuccessResponse>(`${DESIGN_URL}`, { method: "POST", data, headers: { "Content-Type": "multipart/form-data" } });
 };
 
-export const getDesigns = async (): Promise<DesignList> => {
-  return apiClient<DesignList>(`${DESIGN_URL}`, { method: "GET" });
+export const getDesigns = async (params: any): Promise<DesignList> => {
+  const queryString = new URLSearchParams(params).toString();
+  return apiClient<DesignList>(`${DESIGN_URL}/?${queryString}`, { method: "GET" });
 };
 
 export const getUserDesigns = async (userID: string | undefined): Promise<DesignList> => {
@@ -25,4 +25,8 @@ export const updateDesign = async (DesignID: string, data: Partial<DesignFormInp
 
 export const deleteDesign = async (designID: string): Promise<DeleteDesignResponse> => {
   return apiClient<DeleteDesignResponse>(`${DESIGN_URL}/${designID}`, { method: "DELETE" });
+};
+
+export const deleteDesigns = async (designIDs: string[]): Promise<DeleteDesignResponse> => {
+  return apiClient<DeleteDesignResponse>(`${DESIGN_URL}`, { method: "DELETE", data: { designIDs } });
 };

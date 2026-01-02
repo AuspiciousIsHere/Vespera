@@ -20,6 +20,19 @@ import ConfirmDeleteDesignDialog from "./ConfirmDeleteDesignDialog";
 import type { Design, DesignList } from "@/types/design";
 import { DESIGN_IMAGE_URL } from "@/constant/constants";
 import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogClose,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogPopup,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Spinner } from "@/components/ui/spinner";
+import useDeleteDesigns from "./hooks/useDeleteDesigns";
+import { useAuthStore } from "@/store/authStore";
 
 const columns: ColumnDef<Design>[] = [
   {
@@ -63,7 +76,7 @@ const columns: ColumnDef<Design>[] = [
   },
   {
     accessorKey: "gradients",
-    header: () => <div className="text-right">Gradinets</div>,
+    header: () => <div>Gradinets</div>,
     cell: ({ row }) => {
       // const amount = parseFloat(row.getValue("amount"));
 
@@ -74,7 +87,7 @@ const columns: ColumnDef<Design>[] = [
 
       const gradients: string[] = row.getValue("gradients");
 
-      return <div className="text-right font-medium">{gradients.length}</div>;
+      return <div className="font-medium">{gradients.length}</div>;
     },
   },
   {
@@ -136,6 +149,8 @@ export default function DesignsTable({ designs }: DesignsContainerMapPropTypes) 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const user = useAuthStore((state) => state.user);
+  const { mutate: deleteDesigns, isPending: isDeletingDesigns } = useDeleteDesigns(user?._id);
 
   const defaultDesigns: DesignList = {
     status: "",
@@ -164,7 +179,7 @@ export default function DesignsTable({ designs }: DesignsContainerMapPropTypes) 
 
   return (
     <div className="w-full">
-      <div className="py-4">
+      <div className="py-4 flex items-center justify-between">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-full max-w-3xs justify-between">
@@ -218,6 +233,37 @@ export default function DesignsTable({ designs }: DesignsContainerMapPropTypes) 
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <AlertDialog>
+          <AlertDialogTrigger
+            disabled={!(table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate"))}
+            render={<Button variant="outline" className="text-red-400" title="Delete Selected Designs" />}
+          >
+            <Trash />
+          </AlertDialogTrigger>
+
+          <AlertDialogPopup>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Selected Designs?</AlertDialogTitle>
+              <AlertDialogDescription>This action cannot be undone</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogClose render={<Button variant="ghost">Cancel</Button>} />
+              <AlertDialogClose
+                render={
+                  <Button
+                    variant="destructive"
+                    onClick={() => deleteDesigns(table.getSelectedRowModel().rows.map((row) => row.original._id))}
+                    disabled={isDeletingDesigns}
+                  />
+                }
+              >
+                {isDeletingDesigns && <Spinner />}
+                Delete Designs
+              </AlertDialogClose>
+            </AlertDialogFooter>
+          </AlertDialogPopup>
+        </AlertDialog>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -234,6 +280,7 @@ export default function DesignsTable({ designs }: DesignsContainerMapPropTypes) 
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (

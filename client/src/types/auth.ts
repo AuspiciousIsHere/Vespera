@@ -32,10 +32,15 @@ export interface LogoutSuccessResponse {
 }
 
 // Error
-export interface ApiErrorResponse {
+export interface CustomBackendError {
+  status: string;
+  error: {
+    statusCode: number;
+    status: string;
+    isOperational: boolean;
+  };
   message: string;
-  status?: number;
-  code?: string;
+  stack?: string;
 }
 
 // Forget Password
@@ -54,6 +59,18 @@ export interface ResetPasswordFormInputs {
 }
 
 export interface ResetPasswordResponse {
+  token: string;
+  data: User;
+}
+
+// Update Password
+export interface UpdatePasswordFormInputs {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface UpdatePasswordResponse {
   token: string;
   data: User;
 }

@@ -124,21 +124,18 @@ export default function DesignDetailsPage() {
                 })}
               </span>
             </div>
-
-            {design.tags.length > 0 && (
-              <div>
-                <span className="text-muted-foreground block mb-3">Tags</span>
-                <div className="flex flex-wrap gap-2">
-                  {design.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
+
+        {design.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {design.tags.map((tag) => (
+              <Badge key={tag} variant="secondary" className="bg-purple-500/20 text-purple-500 text-base px-2">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
 
         <Separator />
 

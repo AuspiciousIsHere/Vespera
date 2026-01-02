@@ -26,6 +26,7 @@ import { useTheme } from "@/context/themeContext";
 import PageNotFound from "./ui/PageNotFound";
 import EntryPage from "./pages/EntryPage";
 import AppLayout from "./ui/AppLayout";
+import ManageDesignsTable from "./features/admin/ManageDesignsTable";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,7 @@ const router = createBrowserRouter([
       },
       { path: "/create-design", element: <CreateDesignForm /> },
       { path: "/manage-users", element: <ManageUsersTable /> },
+      { path: "/manage-designs", element: <ManageDesignsTable /> },
     ],
   },
   { path: "*", element: <PageNotFound /> },

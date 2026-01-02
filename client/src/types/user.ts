@@ -6,6 +6,9 @@ export interface User {
   email: string;
   username: string;
   usernameSlug: string;
+  loginNotif: boolean;
+  designs: string[];
+  role?: string;
   bio?: string;
   phone?: string;
   picture?: string;
@@ -21,8 +24,11 @@ export interface User {
 export interface UpdateUserProfileFormInputs {
   firstName: string;
   lastName: string;
+  loginNotif: boolean;
   username?: string;
+  designs: string[];
   bio?: string;
+  role?: string;
   phone?: string;
   picture?: FileList | undefined;
   discord?: string;
@@ -46,6 +52,20 @@ export interface UpdateUserProfileResponse {
 
 export interface GetAllUsersResponse {
   status: string;
+  results: number;
   total: number;
   data: User[];
+}
+
+export interface DeleteUserAccountResponse {
+  message: string;
+}
+
+export interface HandleLoginNotifResponse {
+  status: string;
+  data: User;
+}
+
+export interface DeleteUsersResponse {
+  status: string;
 }

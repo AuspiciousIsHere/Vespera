@@ -10,9 +10,10 @@ export default function AppSidebar() {
 
   const sidebarItems = [
     { title: "Designs", url: "/designs", icon: Home },
-    { title: "My Designs", url: `/designs/${user?.usernameSlug}`, icon: UserRoundPen },
+    { title: "My Designs", url: `/designs/${user?.usernameSlug}`, icon: UserRoundPen, hidden: user?.role === "admin" },
     { title: "Profile", url: `/profile/${user?.usernameSlug}`, icon: Proportions },
-    { title: "Manage Users", url: `/manage-users`, icon: UserRound },
+    { title: "Manage Users", url: `/manage-users`, icon: UserRound, hidden: user?.role !== "admin" },
+    { title: "Manage Desings", url: `/manage-designs`, icon: UserRound, hidden: user?.role !== "admin" },
   ];
 
   // const data = {
@@ -58,7 +59,7 @@ export default function AppSidebar() {
   // };
 
   return (
-    <Sidebar collapsible="offcanvas" style={{}}>
+    <Sidebar collapsible="offcanvas">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="hover:bg-transparent">
@@ -75,16 +76,18 @@ export default function AppSidebar() {
       <SidebarContent>
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarMenu>
-            {sidebarItems.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <NavLink to={item.url} className={`${pathname === item.url && "active-link"} transition-all`}>
-                    <item.icon />
-                    {item.title}
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {sidebarItems
+              .filter((item) => !item.hidden)
+              .map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <NavLink to={item.url} className={`${pathname === item.url && "active-link"} transition-all`}>
+                      <item.icon />
+                      {item.title}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

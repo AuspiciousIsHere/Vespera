@@ -1,16 +1,22 @@
 import { Key, Shield } from "lucide-react";
+import { useState } from "react";
 
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import UpdatePasswordForm from "./UpdatePasswordForm";
+import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-
-import UpdatePasswordForm from "./UpdatePasswordForm";
+import useHandleLoginNotif from "./hooks/useHandleLoginNotif";
 
 export default function Security() {
+  const [showUpdatePasswordDialog, setShowUpdatePasswordDialog] = useState(false);
+  const { isPending: isChanginingLoginNotifState, mutate: changeLoginNotifState } = useHandleLoginNotif();
+  const user = useAuthStore((state) => state.user);
+
   return (
     <Card>
       <CardHeader>
@@ -25,13 +31,13 @@ export default function Security() {
               <p className="text-muted-foreground text-sm">Last changed 3 months ago</p>
             </div>
 
-            <Dialog>
-              <DialogTrigger render={<Button variant="outline" />}>
+            <Dialog open={showUpdatePasswordDialog} onOpenChange={setShowUpdatePasswordDialog}>
+              <DialogTrigger render={<Button variant="outline" onClick={() => setShowUpdatePasswordDialog(true)} />}>
                 <Key className="mr-2 h-4 w-4" />
                 Change Password
               </DialogTrigger>
 
-              <UpdatePasswordForm />
+              <UpdatePasswordForm showUpdatePasswordDialog={showUpdatePasswordDialog} setShowUpdatePasswordDialog={setShowUpdatePasswordDialog} />
             </Dialog>
           </div>
 
@@ -59,7 +65,7 @@ export default function Security() {
               <Label className="text-base">Login Notifications</Label>
               <p className="text-muted-foreground text-sm">Get notified when someone logs into your account</p>
             </div>
-            <Switch defaultChecked />
+            <Switch defaultChecked={user?.loginNotif} disabled={isChanginingLoginNotifState} onCheckedChange={() => changeLoginNotifState()} />
           </div>
 
           <Separator />

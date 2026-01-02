@@ -5,7 +5,7 @@ export interface DesignColorInput {
 
 export interface Design {
   _id: string;
-  ownerID: string;
+  owner: string;
   name: string;
   description: string;
   images: string[];
