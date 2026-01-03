@@ -21,18 +21,19 @@ import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import ConfirmDeleteUserDialog from "./ConfirmDeleteUserDialog";
-import useGetAllUsers from "./hooks/useGetAllUsers";
 import useDeleteUsers from "./hooks/useDeleteUsers";
-import UserDetailsDialog from "./UserDetailsDialog";
 import TablePagination from "@/ui/TablePagination";
 import PageSpinner from "@/ui/PageSpinner";
 
-import { USER_IMAGE_URL } from "@/constant/constants";
+import useGetAllDesigns from "./hooks/useGetAllDesigns";
+import { DESIGN_IMAGE_URL, USER_IMAGE_URL } from "@/constant/constants";
 import { useDebounce } from "@/hooks/useDebounce";
+import type { Design } from "@/types/design";
 import type { User } from "@/types/user";
+import { Link } from "react-router";
+import ConfirmDeleteDesignDialog from "../design/ConfirmDeleteDesignDialog";
 
-const userTableColumsn: ColumnDef<User>[] = [
+const designTableColumsn: ColumnDef<Design>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -51,15 +52,16 @@ const userTableColumsn: ColumnDef<User>[] = [
     cell: ({ row, table }) => table.getSortedRowModel()?.flatRows?.findIndex((flatRow) => flatRow.id === row.id) + 1 || 0 + 1,
   },
   {
-    accessorKey: "picture",
-    header: "Picture",
+    accessorKey: "images",
+    header: "Image",
     cell: ({ row }) => {
-      const userPicture = row.getValue("picture");
+      const designPictures: string[] = row.getValue("images");
+      const designPicture = designPictures[0];
 
       return (
-        <div className="size-12 rounded-full bg-secondary flex items-center justify-center overflow-hidden">
-          {userPicture && userPicture !== "default-user.png" ? (
-            <img src={`${USER_IMAGE_URL}/${userPicture}`} alt={row.getValue("username")} className="" />
+        <div className="w-14 bg-secondary flex items-center justify-center">
+          {designPicture && designPicture !== "default-user.png" ? (
+            <img src={`${DESIGN_IMAGE_URL}/${designPicture}`} alt={row.getValue("username")} className="" />
           ) : (
             <UserRound className="size-7" />
           )}
@@ -68,79 +70,54 @@ const userTableColumsn: ColumnDef<User>[] = [
     },
   },
   {
-    id: "patient-name",
-    header: "Patient Name",
-    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-    cell: ({ row }) => (
-      <div>
-        {row.original.firstName} {row.original.lastName}
-      </div>
-    ),
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => row.getValue("name"),
   },
   {
-    accessorKey: "username",
-    header: "Username",
-    cell: ({ row }) => row.getValue("username"),
+    accessorKey: "owner",
+    header: "Owner",
+    cell: ({ row }) => {
+      const user: User = row.getValue("owner");
+      console.log(user);
+      return `${user.firstName} ${user.lastName}`;
+    },
   },
   {
-    accessorKey: "email",
-    header: "Eamil",
-    cell: ({ row }) => row.getValue("email"),
-  },
-  {
-    accessorKey: "designs",
+    accessorKey: "gradients",
     header: "Designs",
     cell: ({ row }) => {
-      const designs: string[] = row.getValue("designs");
-      return designs.length;
+      const gradients: string[] = row.getValue("gradients");
+      return gradients.length;
     },
   },
   {
-    accessorKey: "active",
-    header: "Active",
-    cell: ({ row }) => (row.getValue("active") ? <CircleCheck className="text-emerald-500" /> : <CircleX className="text-red-500" />),
-  },
-  {
-    accessorKey: "followers",
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        Followers
-        <ArrowUpDown className={`ml-2 h-4 w-4 transition-transform ${column.getIsSorted() === "asc" ? "rotate-180" : ""}`} />
-      </Button>
-    ),
+    accessorKey: "colors",
+    header: "Colors",
     cell: ({ row }) => {
-      const followers: string[] = row.getValue("followers") || [];
-      return followers.length;
-    },
-    sortingFn: (rowA, rowB, columndID) => {
-      const lenA = (rowA.getValue(columndID) as string[])?.length ?? 0;
-      const lenB = (rowB.getValue(columndID) as string[])?.length ?? 0;
-      return lenA - lenB;
+      const colors: string[] = row.getValue("colors");
+      return colors.length;
     },
   },
   {
-    accessorKey: "following",
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        Following
-        <ArrowUpDown className={`ml-2 h-4 w-4 transition-transform ${column.getIsSorted() === "asc" ? "rotate-180" : ""}`} />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const followers: string[] = row.getValue("following");
-      return followers.length;
-    },
-    sortingFn: (rowA, rowB, columndID) => {
-      const lenA = (rowA.getValue(columndID) as string[])?.length ?? 0;
-      const lenB = (rowB.getValue(columndID) as string[])?.length ?? 0;
-      return lenA - lenB;
-    },
+    accessorKey: "likes",
+    header: "Likes",
+    cell: ({ row }) => row.getValue("likes"),
   },
   {
-    id: "mneu",
+    accessorKey: "ratingCount",
+    header: "Rated",
+    cell: ({ row }) => row.getValue("ratingCount"),
+  },
+  {
+    accessorKey: "rating",
+    header: "Rating",
+    cell: ({ row }) => row.getValue("rating"),
+  },
+  {
+    id: "menu",
     cell: ({ row }) => {
-      const [showConfirmDeleteUserDialog, setShowConfirmDeleteUserDialog] = useState(false);
-      const [showUserDetailsDialog, setShowUserDetailsDialog] = useState(false);
+      const [showConfirmDeleteDesign, setShowConfirmDeleteDesign] = useState(false);
 
       return (
         <Menu>
@@ -150,27 +127,24 @@ const userTableColumsn: ColumnDef<User>[] = [
 
           <MenuPopup>
             <MenuGroup>
-              <MenuItem onClick={() => setShowUserDetailsDialog(true)}>
-                <Eye />
-                {row.getValue("active") ? "Deactivate" : "Active"}
+              <MenuItem>
+                <Link to={`/design/${row.original._id}`} className="flex items-center gap-2">
+                  <Eye />
+                  Details
+                </Link>
               </MenuItem>
 
-              <MenuItem onClick={() => setShowUserDetailsDialog(true)}>
-                <Eye />
-                Details
-              </MenuItem>
-
-              <MenuItem onClick={() => setShowConfirmDeleteUserDialog(true)} className="text-red-400">
+              <MenuItem onClick={() => setShowConfirmDeleteDesign(true)} className="text-red-400">
                 <Trash className="size-4" />
                 Delete
               </MenuItem>
             </MenuGroup>
           </MenuPopup>
 
-          <UserDetailsDialog showUserDetailsDialog={showUserDetailsDialog} setShowUserDetailsDialog={setShowUserDetailsDialog} />
-          <ConfirmDeleteUserDialog
-            showConfirmDeleteUserDialog={showConfirmDeleteUserDialog}
-            setShowConfirmDeleteUserDialog={setShowConfirmDeleteUserDialog}
+          <ConfirmDeleteDesignDialog
+            designID={row.original._id}
+            showConfirmDeleteDesign={showConfirmDeleteDesign}
+            setShowConfirmDeleteDesign={setShowConfirmDeleteDesign}
           />
         </Menu>
       );
@@ -178,32 +152,30 @@ const userTableColumsn: ColumnDef<User>[] = [
   },
 ];
 
-export default function ManageUsersTable() {
+export default function ManageDesignsTable() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [sortBy, setSortBy] = useState<SortingState>([]);
-  const [activeFilter, setActiveFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearchTerm = useDebounce(searchTerm, 1000);
 
   const { isPending: isDeletingUsers, mutate: deleteUsers } = useDeleteUsers();
 
-  const getAllUsersFilters = {
+  const getAllDesignsFilters = {
     page: pageIndex + 1,
     pageSize,
     search: debounceSearchTerm,
-    active: activeFilter,
     sort: sortBy[0] ? `${sortBy[0]?.desc ? "-" : ""}${sortBy[0]?.id}` : "-createdAt",
   };
 
-  const { isPending: isGettingAllUsers, data: usersData } = useGetAllUsers(getAllUsersFilters);
+  const { isPending: isGettingAllDesigns, data: designsData } = useGetAllDesigns(getAllDesignsFilters);
 
   const table = useReactTable({
-    data: usersData?.data ?? [],
-    columns: userTableColumsn,
+    data: designsData?.data ?? [],
+    columns: designTableColumsn,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -214,7 +186,7 @@ export default function ManageUsersTable() {
     onPaginationChange: setPagination,
     onSortingChange: setSortBy,
     manualPagination: true,
-    rowCount: usersData?.total ?? 0,
+    rowCount: designsData?.total ?? 0,
     state: {
       sorting: sortBy,
       columnFilters,
@@ -230,12 +202,12 @@ export default function ManageUsersTable() {
     { label: "Deactive", value: "deactive" },
   ];
 
-  if (isGettingAllUsers) return <PageSpinner />;
+  if (isGettingAllDesigns) return <PageSpinner />;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-7">
-        <h2 className="text-2xl">{usersData?.total} Users</h2>
+        <h2 className="text-2xl">{designsData?.total} Users</h2>
 
         <div className="flex items-center gap-3">
           {/* Delete selected users */}
@@ -279,7 +251,7 @@ export default function ManageUsersTable() {
           <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search email, username or fullname" />
 
           {/* user state filter */}
-          <Select
+          {/* <Select
             items={activeUsersOptions}
             aria-label="Select User State"
             value={activeFilter}
@@ -296,7 +268,7 @@ export default function ManageUsersTable() {
                 </SelectItem>
               ))}
             </SelectPopup>
-          </Select>
+          </Select> */}
         </div>
       </div>
 
@@ -326,7 +298,7 @@ export default function ManageUsersTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={userTableColumsn.length} className="h-24 text-center">
+                <TableCell colSpan={designTableColumsn.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -335,7 +307,7 @@ export default function ManageUsersTable() {
         </Table>
       </div>
 
-      <TablePagination totalCount={usersData?.total || 0} pageSize={pageSize} pageIndex={pageIndex} setPagination={setPagination} />
+      <TablePagination totalCount={designsData?.total || 0} pageSize={pageSize} pageIndex={pageIndex} setPagination={setPagination} />
     </div>
   );
 }

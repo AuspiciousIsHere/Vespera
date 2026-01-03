@@ -1,19 +1,18 @@
 import { Calendar, Camera, Mail, MapPin, UserRound } from "lucide-react";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { useRef, useState, type ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
-
-import { useAuthStore } from "@/store/authStore";
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
-import { useForm } from "react-hook-form";
 import type { UpdateUserProfileFormInputs } from "@/types/user";
 import { useUpdateUserProfile } from "./hooks/useUpdateUserProfile";
-import { Spinner } from "@/components/ui/spinner";
 import { USER_IMAGE_URL } from "@/constant/constants";
+import { Spinner } from "@/components/ui/spinner";
+import { useAuthStore } from "@/store/authStore";
 
 export default function UserCardInfo() {
   const [userPicture, setUserPicture] = useState<string | undefined>();
@@ -21,17 +20,7 @@ export default function UserCardInfo() {
   const user = useAuthStore((state) => state.user);
   const { isPending: isUpdatingUser, mutate: updateUser } = useUpdateUserProfile();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<UpdateUserProfileFormInputs>();
-
-  function onSubmit(file: File) {
-    const formData = new FormData();
-    formData.append("picture", file);
-    updateUser(formData);
-  }
+  const { register } = useForm<UpdateUserProfileFormInputs>();
 
   function handleUserImageChnage(e: ChangeEvent<HTMLInputElement>): void {
     if (!e.target.files?.[0]) return;
@@ -39,6 +28,12 @@ export default function UserCardInfo() {
     setUserPicture(URL.createObjectURL(e.target.files[0]));
 
     onSubmit(e.target.files[0]);
+  }
+
+  function onSubmit(file: File) {
+    const formData = new FormData();
+    formData.append("picture", file);
+    updateUser(formData);
   }
 
   return (

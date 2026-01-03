@@ -10,8 +10,6 @@ interface ButtonLinkPropTypes {
 }
 
 export default function ButtonLink({ to, variant = "default", children, className }: ButtonLinkPropTypes) {
-  console.log(className);
-
   return (
     <Button className={`${className}`} variant={variant}>
       <Link to={to} className="flex items-center gap-2 h-full p-0 m-0">

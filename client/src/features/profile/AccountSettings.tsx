@@ -2,12 +2,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import ConfirmDeleteAccountModal from "./ConfirmDeleteAccountModal";
 import { Separator } from "@/components/ui/separator";
+import { useAuthStore } from "@/store/authStore";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 
 export default function AccountSettings() {
+  const user = useAuthStore((state) => state.user);
+
   return (
     <>
       <Card>
@@ -15,14 +18,15 @@ export default function AccountSettings() {
           <CardTitle>Account Settings</CardTitle>
           <CardDescription>Manage your account preferences and subscription.</CardDescription>
         </CardHeader>
+
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label className="text-base">Account Status</Label>
               <p className="text-muted-foreground text-sm">Your account is currently active</p>
             </div>
-            <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">
-              Active
+            <Badge variant="outline" className={user?.active ? "bg-green-400/20 text-green-400" : "bg-red-300/20 text-red-500"}>
+              {user?.active ? "Active" : "Deactive"}
             </Badge>
           </div>
 
@@ -63,6 +67,7 @@ export default function AccountSettings() {
           <CardTitle className="text-destructive">Danger Zone</CardTitle>
           <CardDescription>Irreversible and destructive actions</CardDescription>
         </CardHeader>
+
         <CardContent>
           <AlertDialog>
             <div className="w-full flex justify-end">
