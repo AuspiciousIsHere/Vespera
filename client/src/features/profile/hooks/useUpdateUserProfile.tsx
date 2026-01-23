@@ -3,8 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
-import { updateUserProfile } from "@/api/user";
 import { useAuthStore } from "@/store/authStore";
+import { updateUserProfile } from "@/api/user";
 
 export function useUpdateUserProfile() {
   const zustandUpdateUser = useAuthStore((state) => state.updateUser);

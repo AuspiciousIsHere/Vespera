@@ -1,4 +1,4 @@
-import useGetUserDesigns from "./hooks/useGetUserDesigns";
+import { useGetUserDesigns } from "./hooks/useGetUserDesigns";
 import DesignsContainerMap from "./DesignsContainerMap";
 import { useAuthStore } from "@/store/authStore";
 import PageSpinner from "@/ui/PageSpinner";

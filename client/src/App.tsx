@@ -9,6 +9,7 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 
 // Admin
+import ManageDesignsTable from "./features/admin/ManageDesignsTable";
 import ManageUsersTable from "./features/admin/ManageUsersTable";
 
 // Design
@@ -26,7 +27,9 @@ import { useTheme } from "@/context/themeContext";
 import PageNotFound from "./ui/PageNotFound";
 import EntryPage from "./pages/EntryPage";
 import AppLayout from "./ui/AppLayout";
-import ManageDesignsTable from "./features/admin/ManageDesignsTable";
+import ChatLayout from "./features/Chat/ChatLayout";
+
+// Chats
 
 const router = createBrowserRouter([
   {
@@ -57,6 +60,7 @@ const router = createBrowserRouter([
       { path: "/create-design", element: <CreateDesignForm /> },
       { path: "/manage-users", element: <ManageUsersTable /> },
       { path: "/manage-designs", element: <ManageDesignsTable /> },
+      { path: "/chats", element: <ChatLayout /> },
     ],
   },
   { path: "*", element: <PageNotFound /> },

@@ -134,4 +134,147 @@
     background-color: var(--primary);
     color: var(--accent);
   }
+
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent-foreground);
+  }
+
+  /* Handle on hover */
+  /* ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  } */
+}
+
+/* First section animation */
+.welcome-light-show-off {
+  /* Change 100px to 200px to push the shadow further DOWN */
+  box-shadow: 0px 100px 200px 100px var(--secondary);
+  opacity: 0.75;
+  animation: welcome-light-animation 2.5s ease-out;
+}
+
+@keyframes welcome-light-animation {
+  0% {
+    opacity: 0;
+    box-shadow: 0px 0px 0px 0px transparent;
+  }
+  100% {
+    opacity: 75%;
+    /* Use the accent-foreground color for the glow */
+    box-shadow: 0px 100px 300px 100px var(--accent-foreground);
+  }
+}
+
+/* Second section animation */
+@keyframes horizontal-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-infinite-scroll {
+  display: flex;
+  width: max-content; /* Critical: allows the container to grow beyond 100% width */
+  animation: horizontal-scroll 60s linear infinite;
+}
+
+/* Pause animation on hover */
+.pause-on-hover:hover .animate-infinite-scroll {
+  animation-play-state: paused;
+}
+
+/* Third section */
+@keyframes move-from-left-to-right {
+  from {
+    opacity: 0;
+    transform: translateX(-200px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes move-from-right-to-left {
+  from {
+    opacity: 0;
+    transform: translateX(200px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.text-from-left-to-right {
+  animation: move-from-left-to-right 1s ease-out;
+}
+
+.text-from-right-to-left {
+  animation: move-from-right-to-left 1s ease-out;
+}
+
+/* Login animation */
+.red-light-turn-on {
+  animation: red-light-turn-on 1s ease-in-out;
+}
+.blue-light-turn-on {
+  animation: red-light-turn-on 2s ease-in-out;
+}
+
+@keyframes red-light-turn-on {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 20%;
+  }
+}
+
+@keyframes blue-light-turn-on {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 20%;
+  }
+}
+
+/* Login animation */
+.amber-light-turn-on {
+  animation: amber-light-turn-on 1s ease-in-out;
+}
+.emerald-light-turn-on {
+  animation: emerald-light-turn-on 2s ease-in-out;
+}
+
+@keyframes amber-light-turn-on {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 10%;
+  }
+}
+
+@keyframes emerald-light-turn-on {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 20%;
+  }
 }

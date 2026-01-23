@@ -8,7 +8,7 @@ const emptyDesignsResponse: DesignList = {
   data: [],
 };
 
-export default function useGetUserDesigns(userID: string | undefined) {
+export function useGetUserDesigns(userID: string | undefined) {
   return useQuery({
     queryKey: ["user-designs", userID],
     queryFn: () => getUserDesigns(userID),

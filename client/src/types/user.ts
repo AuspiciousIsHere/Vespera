@@ -52,7 +52,7 @@ export interface UpdateUserProfileResponse {
 
 export interface GetAllUsersResponse {
   status: string;
-  results: number;
+  resultsCount: number;
   total: number;
   data: User[];
 }

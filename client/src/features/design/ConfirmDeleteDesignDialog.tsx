@@ -7,7 +7,7 @@ import {
   AlertDialogPopup,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import useDeleteDesign from "./hooks/useDeleteDesign";
+import { useDeleteDesign } from "./hooks/useDeleteDesign";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 

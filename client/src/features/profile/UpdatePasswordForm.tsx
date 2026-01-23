@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 
 import { DialogClose, DialogFooter, DialogHeader, DialogPanel, DialogPopup, DialogTitle } from "@/components/ui/dialog";
-import useUpdateUserPassword from "./hooks/useUpdateUserPassword";
+import { useUpdateUserPassword } from "./hooks/useUpdateUserPassword";
 import type { UpdatePasswordFormInputs } from "@/types/auth";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
@@ -10,11 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Form } from "@/components/ui/form";
 
 interface UpdatePasswordFormProps {
-  showUpdatePasswordDialog: boolean;
   setShowUpdatePasswordDialog: (value: boolean) => void;
 }
 
-export default function UpdatePasswordForm({ showUpdatePasswordDialog, setShowUpdatePasswordDialog }: UpdatePasswordFormProps) {
+export default function UpdatePasswordForm({ setShowUpdatePasswordDialog }: UpdatePasswordFormProps) {
   const { register, handleSubmit } = useForm<UpdatePasswordFormInputs>();
   const { isPending: isUpdatingPassword, mutate: updateUserPassword } = useUpdateUserPassword();
 

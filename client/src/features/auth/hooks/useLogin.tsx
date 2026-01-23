@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import type { LoginFormInputs, LoginSuccessResponse } from "@/types/auth";
 import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
 import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "@/api/auth";
 import { useAuthStore } from "@/store/authStore";
+import { loginUser } from "@/api/auth";
 
 export function useLogin() {
   const navigate = useNavigate();

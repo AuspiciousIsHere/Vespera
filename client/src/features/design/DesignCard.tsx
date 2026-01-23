@@ -2,7 +2,6 @@ import { Heart, ImageIcon, Star } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DESIGN_IMAGE_URL } from "@/constant/constants";
-import { Badge } from "@/components/ui/badge";
 import type { Design } from "@/types/design";
 import ButtonLink from "@/ui/ButtonLink";
 
@@ -29,7 +28,7 @@ export default function DesignCard({ design }: DesignCardProps) {
 
       <CardHeader className="space-y-1 px-4">
         <CardTitle className="text-lg flex items-center gap-4">
-          <div>{design.name}</div>
+          <div className="truncate w-full text-ellipsis overflow-hidden">{design.name}</div>
 
           <span className="flex items-center text-sm">
             <Star className="w-4 h-4 mr-1 fill-amber-400 text-amber-400" />
@@ -38,7 +37,7 @@ export default function DesignCard({ design }: DesignCardProps) {
 
           <span className="flex items-center text-sm">
             <Heart className="w-4 h-4 mr-1 fill-red-500 text-red-500" />
-            {design.likes.toLocaleString()}
+            {design.likesCount}
           </span>
         </CardTitle>
         <CardDescription className="line-clamp-2">{design.description}</CardDescription>

@@ -2,6 +2,7 @@ import { Key, Shield } from "lucide-react";
 import { useState } from "react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useHandleLoginNotif } from "./hooks/useHandleLoginNotif";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import UpdatePasswordForm from "./UpdatePasswordForm";
@@ -10,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import useHandleLoginNotif from "./hooks/useHandleLoginNotif";
 
 export default function Security() {
   const [showUpdatePasswordDialog, setShowUpdatePasswordDialog] = useState(false);
@@ -37,7 +37,7 @@ export default function Security() {
                 Change Password
               </DialogTrigger>
 
-              <UpdatePasswordForm showUpdatePasswordDialog={showUpdatePasswordDialog} setShowUpdatePasswordDialog={setShowUpdatePasswordDialog} />
+              <UpdatePasswordForm setShowUpdatePasswordDialog={setShowUpdatePasswordDialog} />
             </Dialog>
           </div>
 

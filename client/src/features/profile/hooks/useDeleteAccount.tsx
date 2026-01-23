@@ -6,7 +6,7 @@ import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
 import { useAuthStore } from "@/store/authStore";
 import { deleteAccount } from "@/api/user";
 
-export default function useDeleteAccount() {
+export function useDeleteAccount() {
   const zustandLogout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
   const { handleError } = useToastErrorHandler();

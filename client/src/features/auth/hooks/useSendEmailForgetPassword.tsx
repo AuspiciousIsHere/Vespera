@@ -1,9 +1,10 @@
-import { sendEmailForgetPassword } from "@/api/auth";
-import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-export default function useSendEmailForgetPassword() {
+import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
+import { sendEmailForgetPassword } from "@/api/auth";
+
+export function useSendEmailForgetPassword() {
   const { handleError } = useToastErrorHandler();
 
   return useMutation({

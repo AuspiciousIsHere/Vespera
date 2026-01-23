@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import type { SignupSuccessResponse, SingupFormInputs } from "@/types/auth";
 import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
 import { useMutation } from "@tanstack/react-query";
-import { singupUser } from "@/api/auth";
 import { useAuthStore } from "@/store/authStore";
+import { singupUser } from "@/api/auth";
 
 export function useSignup() {
   const navigate = useNavigate();

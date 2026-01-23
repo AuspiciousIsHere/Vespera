@@ -52,7 +52,7 @@ export default function TablePagination({ totalCount, pageSize, pageIndex, setPa
   if (totalPages <= 1) return null;
 
   return (
-    <div className="py-4">
+    <div className="pt-10">
       <Pagination>
         <PaginationContent>
           <PaginationItem>

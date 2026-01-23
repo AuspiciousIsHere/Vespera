@@ -3,7 +3,7 @@ import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-export default function useDeleteDesigns(userID: string | undefined) {
+export function useDeleteUserDesigns(userID: string) {
   const queryClient = useQueryClient();
   const { handleError } = useToastErrorHandler();
 

@@ -12,11 +12,14 @@ export default function AppHeader({ showVespera = false }) {
   const { setTheme, theme } = useTheme();
   const { logout } = useLogout();
 
+  const redirectULR = user?.role === "admin" ? `/profile/${user.username}` : `/designs/${user?.usernameSlug}`;
+
   return (
-    <div className="border-b-2 bg-background h-14 w-full flex items-center px-4">
+    <header className="border-b-2 bg-background/80 backdrop-blur-2xl h-14 w-full flex items-center px-4 sticky top-0 z-50">
       {showVespera && (
-        <Link to="/">
-          <h2 className="font-extrabold text-2xl">Vespera</h2>
+        <Link to="/" className="flex items-center">
+          <img src="vespera-logo.png" alt="logo" className="size-14" />
+          <h2 className="font-extrabold text-2xl">VESPERA</h2>
         </Link>
       )}
 
@@ -34,7 +37,7 @@ export default function AppHeader({ showVespera = false }) {
           </div>
         ) : (
           <>
-            <ButtonLink to={`/profile/${user?.usernameSlug}`} variant="outline">
+            <ButtonLink to={redirectULR} variant="outline">
               <UserRound />
               {user?.username}
             </ButtonLink>
@@ -45,6 +48,6 @@ export default function AppHeader({ showVespera = false }) {
           </>
         )}
       </div>
-    </div>
+    </header>
   );
 }

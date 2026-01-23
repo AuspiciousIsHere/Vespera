@@ -22,6 +22,8 @@ export function UpdateUserProfileForm() {
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
     username: user?.username || "",
+    designs: user?.designs || [],
+    loginNotif: user?.loginNotif || false,
     bio: user?.bio || "",
     phone: user?.phone || "",
     reddit: user?.reddit || "",
