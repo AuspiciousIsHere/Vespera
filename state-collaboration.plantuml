@@ -1,0 +1,17 @@
+@startuml VisionVibe
+[*] --> Proposed
+
+Proposed --> Accepted : partner accepts
+Proposed --> Cancelled : initiator cancels
+
+Accepted --> InProgress : start work
+InProgress --> Finished : mark complete
+InProgress --> Cancelled : any party cancels
+
+Finished --> [*]
+Cancelled --> [*]
+
+note right of Finished
+  Replaces "COMPLETED"
+end note
+@enduml

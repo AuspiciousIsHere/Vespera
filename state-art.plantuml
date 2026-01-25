@@ -1,0 +1,16 @@
+@startuml VisonVibe
+[*] --> Draft
+
+Draft --> Published : publish()
+Published --> Premium : setPremium()
+Premium --> Published : removePremium()
+
+Published --> Archived : archive()
+Premium --> Archived : archive()
+
+Archived --> [*]
+
+note right of Premium
+  Only if owner.followers >= 1000
+end note
+@enduml

@@ -1,0 +1,131 @@
+@startuml VisionVibe
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+' ---------- USER ----------
+class User {
+  +userId : UUID <<PK>>
+  +username : String
+  +email : String
+  +passwordHash : String
+  +createdAt : Timestamp
+  +isAdmin : Boolean
+  --
+  +follow(artist: User)
+  +unfollow(artist: User)
+}
+
+' ---------- ART ----------
+class Art {
+  +artId : UUID <<PK>>
+  +title : String
+  +description : String
+  +createdAt : Timestamp
+  +ownerId : UUID <<FK>>
+  +isPremium : Boolean
+  +premiumMode : PremiumMode
+  +likesCount : Integer      <<default 0>>
+  +totalRating : Integer     <<sum of stars>>
+  +ratingCount : Integer     <<number of ratings>>
+  +averageRating : Double    <<computed: totalRating / ratingCount>>
+  --
+  +addImage(image: ArtImage)
+  +setPremium(mode: PremiumMode)
+  +incrementLikes()
+  +addRating(stars: Integer)
+}
+
+' ---------- ART IMAGE ----------
+class ArtImage {
+  +imageId : UUID <<PK>>
+  +url : String
+  +isVisibleToNonSubscribers : Boolean
+}
+
+' ---------- PREMIUM MODE ----------
+enum PremiumMode {
+  WHOLE
+  PARTIAL
+  DOWNLOAD_ONLY
+}
+
+' ---------- COMMENT ----------
+class Comment {
+  +commentId : UUID <<PK>>
+  +userId : UUID <<FK>>
+  +artId : UUID <<FK>>
+  +text : String
+  +createdAt : Timestamp
+}
+
+' ---------- SUBSCRIPTION ----------
+class Subscription {
+  +subscriptionId : UUID <<PK>>
+  +subscriberId : UUID <<FK>>
+  +artistId : UUID <<FK>>
+  +startedAt : Timestamp
+  +endsAt : Timestamp?
+  +status : SubscriptionStatus
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+' ---------- PAYMENT ----------
+class Payment {
+  +paymentId : UUID <<PK>>
+  +subscriptionId : UUID <<FK>>
+  +amount : Decimal
+  +currency : String
+  +paidAt : Timestamp
+  +gatewayTxId : String
+}
+
+' ---------- COLLABORATION ----------
+class Collaboration {
+  +collabId : UUID <<PK>>
+  +title : String
+  +description : String
+  +initiatorId : UUID <<FK>>
+  +partnerId : UUID <<FK>>
+  +createdAt : Timestamp
+  +status : CollabStatus
+}
+
+enum CollabStatus {
+  PROPOSED
+  ACCEPTED
+  IN_PROGRESS
+  FINISHED
+  CANCELLED
+}
+
+' ---------- FOLLOW RELATIONSHIP (many-to-many) ----------
+User "1" --> "0..*" Art : creates
+User "1" --> "0..*" Comment : writes
+User "1" --> "0..*" Subscription : has (subscriber)
+User "1" --> "0..*" Subscription : receives (artist)
+User "1" --> "0..*" Collaboration : initiates/participates
+
+Art "1" --> "1..*" ArtImage : contains
+Art "1" --> "0..*" Comment : receives
+
+Subscription "1" --> "0..*" Payment : paid by
+Collaboration "1" --> "0..*" Art : may produce
+
+' Many-to-many: User follows User (Artist)
+User "follower" }o--o{ "followed" User : follows
+
+note right of User::followers
+  In code: Set<UUID> followers
+  (list of user IDs who follow this user)
+end note
+
+note right of Art::averageRating
+  Computed field – not stored
+end note
+
+@enduml

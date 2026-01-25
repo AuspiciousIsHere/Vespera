@@ -1,0 +1,20 @@
+@startuml VisionVibe
+actor Artist
+participant "Frontend" as FE
+participant "ArtService" as AS
+participant "UserService" as US
+participant "DB" as DB
+
+Artist -> FE : 1. Fill art form (images, description)
+FE -> AS : 2. POST /arts (multipart)
+AS -> US : 3. getUser(artistId)
+US --> AS : user (followers=1200)
+AS -> AS : 4. validate premium allowed
+AS -> DB : 5. INSERT Art (isPremium=true, mode=WHOLE)
+DB --> AS : artId
+loop for each uploaded image
+  AS -> DB : INSERT ArtImage (visible=false)
+end
+AS --> FE : 201 Created + artId
+FE --> Artist : Art published as Premium
+@enduml

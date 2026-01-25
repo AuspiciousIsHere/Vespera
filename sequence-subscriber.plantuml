@@ -1,0 +1,17 @@
+@startuml VisionVibe
+actor Subscriber
+participant FE
+participant ArtService
+participant SubscriptionService as SS
+participant DB
+
+Subscriber -> FE : open Art page (artId)
+FE -> ArtService : GET /arts/{artId}
+ArtService -> SS : checkSubscription(subscriberId, artistId)
+SS -> DB : SELECT * FROM Subscription WHERE ...
+SS --> ArtService : ACTIVE
+ArtService -> DB : SELECT Art, ArtImage WHERE artId=...
+DB --> ArtService : Art + all images (visible=true for subscriber)
+ArtService --> FE : 200 + full data
+FE --> Subscriber : show all images + download button
+@enduml

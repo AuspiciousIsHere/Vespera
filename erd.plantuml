@@ -1,0 +1,91 @@
+@startuml VisionVibe
+entity "users" {
+  *user_id : UUID <<PK>>
+  --
+  username : TEXT
+  email : TEXT
+  password : TEXT
+  created_at : TIMESTAMP
+  is_admin : BOOLEAN
+  followers: UUID<<FK>>
+}
+
+entity "arts" {
+  *art_id : UUID <<PK>>
+  --
+  title : TEXT
+  description : TEXT
+  created_at : TIMESTAMP
+  owner_id : UUID <<FK>>
+  is_premium : BOOLEAN
+  premium_mode : TEXT
+  likes_count : INTEGER
+  total_rating : INTEGER
+  rating_count : INTEGER
+}
+
+entity "art_images" {
+  *image_id : UUID <<PK>>
+  --
+  art_id : UUID <<FK>>
+  url : TEXT
+  visible_to_non_subscribers : BOOLEAN
+}
+
+entity "comments" {
+  *comment_id : UUID <<PK>>
+  --
+  user_id : UUID <<FK>>
+  art_id : UUID <<FK>>
+  text : TEXT
+  created_at : TIMESTAMP
+}
+
+entity "subscriptions" {
+  *subscription_id : UUID <<PK>>
+  --
+  subscriber_id : UUID <<FK>>
+  artist_id : UUID <<FK>>
+  started_at : TIMESTAMP
+  ends_at : TIMESTAMP
+  status : TEXT
+}
+
+entity "payments" {
+  *payment_id : UUID <<PK>>
+  --
+  subscription_id : UUID <<FK>>
+  amount : DECIMAL
+  currency : TEXT
+  paid_at : TIMESTAMP
+  gateway_tx_id : TEXT
+}
+
+entity "collaborations" {
+  *collab_id : UUID <<PK>>
+  --
+  title : TEXT
+  description : TEXT
+  initiator_id : UUID <<FK>>
+  partner_id : UUID <<FK>>
+  created_at : TIMESTAMP
+  status : TEXT
+}
+
+' Relationships
+users ||--o{ arts : creates
+users ||--o{ comments : writes
+users ||--o{ subscriptions : subscribes to
+users ||--o{ subscriptions : receives from
+users ||--o{ collaborations : initiates/participates
+
+arts ||--o{ art_images : contains
+arts ||--o{ comments : receives
+
+subscriptions ||--o{ payments : paid by
+collaborations ||--o{ arts : may produce
+
+note right of collaborations::status
+  Valid values: PROPOSED, ACCEPTED, IN_PROGRESS, FINISHED, CANCELLED
+end note
+@enduml

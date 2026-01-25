@@ -1,0 +1,74 @@
+@startuml VisionVide
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Guest" as guest
+actor "Registered User" as user
+actor "Artist (≥1K followers)" as premiumArtist
+actor "Subscriber" as subscriber
+actor "Admin" as admin
+
+package "VisionVide Platform" {
+
+  usecase "Sign-up / Login" as UC_Login
+  usecase "Browse Arts" as UC_Browse
+  usecase "View Art Details" as UC_ViewArt
+  usecase "Like Art" as UC_Like
+  usecase "Rate Art (1-5)" as UC_Rate
+  usecase "Comment on Art" as UC_Comment
+  usecase "Follow Artist" as UC_Follow
+  usecase "Create Art" as UC_CreateArt
+  usecase "Edit / Delete Own Art" as UC_EditArt
+  usecase "Mark Art as Premium\n(whole / part / download)" as UC_Premium
+  usecase "Subscribe to Artist" as UC_Subscribe
+  usecase "View Premium Content" as UC_PremiumView
+  usecase "Download Premium Art" as UC_Download
+  usecase "View Profile" as UC_Profile
+  usecase "Edit Settings" as UC_Settings
+  usecase "Start Collaboration Project" as UC_Collab
+  usecase "Manage Collaboration" as UC_ManageCollab
+  usecase "Manage Users" as UC_AdminUsers
+  usecase "Manage Arts" as UC_AdminArts
+  usecase "Manage Payments / Subscriptions" as UC_AdminPayments
+
+}
+
+guest --> UC_Login
+guest --> UC_Browse
+guest --> UC_ViewArt
+
+user --> UC_Login
+user --> UC_Browse
+user --> UC_ViewArt
+user --> UC_Like
+user --> UC_Rate
+user --> UC_Comment
+user --> UC_Follow
+user --> UC_CreateArt
+user --> UC_EditArt
+user --> UC_Profile
+user --> UC_Settings
+user --> UC_Collab
+
+premiumArtist --> UC_Premium
+premiumArtist --> UC_Collab
+premiumArtist --> UC_ManageCollab
+
+subscriber --> UC_Subscribe
+subscriber --> UC_PremiumView
+subscriber --> UC_Download
+
+admin --> UC_AdminUsers
+admin --> UC_AdminArts
+admin --> UC_AdminPayments
+admin --> UC_Profile
+
+note right of UC_Premium
+  Only artists with ≥1 000 followers
+end note
+
+note right of UC_Collab
+  Section name: **"Collaborations"**
+end note
+
+@enduml
