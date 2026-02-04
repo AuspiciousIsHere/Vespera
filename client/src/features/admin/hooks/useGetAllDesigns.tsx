@@ -1,9 +1,9 @@
 import { getDesigns } from "@/api/design";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useGetAllDesigns(filters: any) {
+export function useGetAllDesigns(filters: Record<string, any>) {
   return useQuery({
-    queryKey: ["all-designs"],
+    queryKey: ["all-designs", filters],
     queryFn: () => getDesigns(filters),
   });
 }

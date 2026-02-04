@@ -31,7 +31,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Spinner } from "@/components/ui/spinner";
-import useDeleteDesigns from "./hooks/useDeleteDesigns";
+import { useDeleteUserDesigns } from "./hooks/useDeleteUserDesigns";
 import { useAuthStore } from "@/store/authStore";
 
 const columns: ColumnDef<Design>[] = [
@@ -150,7 +150,7 @@ export default function DesignsTable({ designs }: DesignsContainerMapPropTypes) 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const user = useAuthStore((state) => state.user);
-  const { mutate: deleteDesigns, isPending: isDeletingDesigns } = useDeleteDesigns(user?._id);
+  const { mutate: deleteDesigns, isPending: isDeletingDesigns } = useDeleteUserDesigns(user?._id || "");
 
   const defaultDesigns: DesignList = {
     status: "",

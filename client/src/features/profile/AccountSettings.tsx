@@ -1,7 +1,12 @@
+import { useState } from "react";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useGetUserTags } from "@/features/tags/hooks/useGetUserTags";
 import ConfirmDeleteAccountModal from "./ConfirmDeleteAccountModal";
+import ManageTagsDialog from "../tags/ManageTagsDialog";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/store/authStore";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -9,7 +14,9 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 
 export default function AccountSettings() {
+  const [showManageTagsDialog, setShowManageTagsDialog] = useState(false);
   const user = useAuthStore((state) => state.user);
+  const { isPending: isGettingUserTags, data: tags } = useGetUserTags(user?._id || "");
 
   return (
     <>
@@ -20,6 +27,7 @@ export default function AccountSettings() {
         </CardHeader>
 
         <CardContent className="space-y-6">
+          {/* Account status */}
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label className="text-base">Account Status</Label>
@@ -32,6 +40,7 @@ export default function AccountSettings() {
 
           <Separator />
 
+          {/* Subscription Plans  */}
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label className="text-base">Subscription Plan</Label>
@@ -42,6 +51,7 @@ export default function AccountSettings() {
 
           <Separator />
 
+          {/* Account Visibility  */}
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label className="text-base">Account Visibility</Label>
@@ -52,6 +62,33 @@ export default function AccountSettings() {
 
           <Separator />
 
+          {/* Manage Tags  */}
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <Label className="text-base">Manage Tags</Label>
+
+              {isGettingUserTags ? (
+                <div className="flex items-center gap-2">
+                  <Skeleton className="" />
+                </div>
+              ) : tags && tags?.data.length > 0 ? (
+                <div className="flex items-center gap-2">
+                  {tags.data.slice(0, 3).map((tag) => (
+                    <Badge className="bg-purple-500/20 text-purple-500 text-sm px-3">{tag.name}</Badge>
+                  ))}
+                  {tags.data.length > 3 && "..."}
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-sm">No tag created yet</p>
+              )}
+            </div>
+
+            <Button onClick={() => setShowManageTagsDialog(true)}>Manage Tags</Button>
+          </div>
+
+          <Separator />
+
+          {/* Data Export  */}
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label className="text-base">Data Export</Label>
@@ -77,6 +114,8 @@ export default function AccountSettings() {
           </AlertDialog>
         </CardContent>
       </Card>
+
+      <ManageTagsDialog showManageTagsDialog={showManageTagsDialog} setShowManageTagsDialog={setShowManageTagsDialog} tags={tags?.data} />
     </>
   );
 }

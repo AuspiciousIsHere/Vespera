@@ -1,25 +1,24 @@
-import { Calendar, Camera, Mail, MapPin, UserRound } from "lucide-react";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { Calendar, Camera, Mail, Phone, UserRound } from "lucide-react";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useRef, useState, type ChangeEvent } from "react";
-import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
-import type { UpdateUserProfileFormInputs } from "@/types/user";
 import { useUpdateUserProfile } from "./hooks/useUpdateUserProfile";
+import type { UpdateUserProfileFormInputs } from "@/types/user";
 import { USER_IMAGE_URL } from "@/constant/constants";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/store/authStore";
+import { Input } from "@/components/ui/input";
 
 export default function UserCardInfo() {
   const [userPicture, setUserPicture] = useState<string | undefined>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const user = useAuthStore((state) => state.user);
   const { isPending: isUpdatingUser, mutate: updateUser } = useUpdateUserProfile();
-
   const { register } = useForm<UpdateUserProfileFormInputs>();
 
   function handleUserImageChnage(e: ChangeEvent<HTMLInputElement>): void {
@@ -39,11 +38,11 @@ export default function UserCardInfo() {
   return (
     <Card className="mb-10 p-6 shadow-xl relative">
       <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-12">
-        <div className="relative w-24 h-24">
-          <Avatar className="h-24 w-24">
+        <div className="relative size-24">
+          <Avatar className="size-full">
             {(user?.picture && user.picture !== "default-user.png") || userPicture ? (
-              <Card className="rounded-full overflow-hidden h-full flex items-center justify-center bg-muted">
-                <AvatarImage src={userPicture || `${USER_IMAGE_URL}/${user?.picture}`} alt={`@${user?.username}`} />
+              <Card className="rounded-full overflow-hidden size-full flex items-center justify-center bg-muted p-0">
+                <AvatarImage src={userPicture || `${USER_IMAGE_URL}/${user?.picture}`} alt={`@${user?.username}`} className="size-full" />
                 {isUpdatingUser && (
                   <div
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-full h-full bg-neutral-500/50`}
@@ -53,8 +52,8 @@ export default function UserCardInfo() {
                 )}
               </Card>
             ) : (
-              <Card className="rounded-full h-full flex items-center justify-center bg-muted">
-                <UserRound className="w-10 h-10" />
+              <Card className="rounded-full size-full flex items-center justify-center bg-muted">
+                <UserRound className="size-10" />
               </Card>
             )}
           </Avatar>
@@ -81,7 +80,9 @@ export default function UserCardInfo() {
             </h1>
             <Badge variant="secondary">Pro Member</Badge>
           </div>
+
           <p className="text-muted-foreground">{user?.bio}</p>
+
           <div className="text-muted-foreground flex flex-wrap gap-4 text-sm">
             <div className="flex items-center gap-1">
               <Mail className="size-4" />
@@ -90,7 +91,7 @@ export default function UserCardInfo() {
 
             {user?.phone && (
               <div className="flex items-center gap-1">
-                <MapPin className="size-4" />
+                <Phone className="size-4" />
                 {user?.phone}
               </div>
             )}

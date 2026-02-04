@@ -12,7 +12,8 @@ export interface Design {
   colors: string[];
   gradients: string[];
   tags: string[];
-  likes: number;
+  likesUsers: string[];
+  likesCount: number;
   rating: number;
   ratingCount: number;
   createdAt: Date;
@@ -42,4 +43,10 @@ export interface DesignSuccessResponse {
 
 export interface DeleteDesignResponse {
   message: string;
+}
+
+export interface GetPopularDesignsResponse {
+  status: string;
+  resultsCount: number;
+  data: Design[];
 }

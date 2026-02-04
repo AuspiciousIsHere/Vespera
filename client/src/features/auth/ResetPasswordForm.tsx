@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ResetPasswordFormInputs } from "@/types/auth";
+import { useResetPassword } from "./hooks/useResetPassword";
 import { Field, FieldLabel } from "@/components/ui/field";
-import useResetPassword from "./hooks/useResetPassword";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

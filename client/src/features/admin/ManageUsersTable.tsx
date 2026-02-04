@@ -22,8 +22,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import ConfirmDeleteUserDialog from "./ConfirmDeleteUserDialog";
-import useGetAllUsers from "./hooks/useGetAllUsers";
-import useDeleteUsers from "./hooks/useDeleteUsers";
+import { useGetAllUsers } from "./hooks/useGetAllUsers";
+import { useDeleteUsers } from "./hooks/useDeleteUsers";
 import UserDetailsDialog from "./UserDetailsDialog";
 import TablePagination from "@/ui/TablePagination";
 import PageSpinner from "@/ui/PageSpinner";
@@ -300,7 +300,7 @@ export default function ManageUsersTable() {
         </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md border bg-background">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

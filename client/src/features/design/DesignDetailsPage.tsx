@@ -1,22 +1,28 @@
 import { ArrowLeft, Calendar, Heart, Star, ImageIcon, Copy } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
+import { FaHeart } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { hexToHsl, hexToRgb } from "@/utils/colorFormat";
 import { DESIGN_IMAGE_URL } from "@/constant/constants";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import useGetDesign from "./hooks/useGetDesign";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "react-toastify";
+
+import { useUpdateDesignLikes } from "./hooks/useUpdateDesignLikes";
+import { useGetDesign } from "./hooks/useGetDesign";
+import { useAuthStore } from "@/store/authStore";
 
 export default function DesignDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const { data, isPending: isGettingDesign, error } = useGetDesign(id || "");
+  const { isPending: isUpdatingDesignLikes, mutate: upateDesignLikes } = useUpdateDesignLikes(id || "");
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
   const design = data?.data;
+  const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
 
   // Set first image as default when data loads
@@ -42,8 +48,6 @@ export default function DesignDetailsPage() {
       </div>
     );
   }
-
-  console.log(design);
 
   function copyColor(color: string | null) {
     if (!color) return;
@@ -110,8 +114,19 @@ export default function DesignDetailsPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Heart className="size-5 text-red-500" />
-              <span className="font-bold text-lg">{design.likes}</span>
+              <Button
+                disabled={!user?._id || isUpdatingDesignLikes}
+                variant="ghost"
+                className="size-8 rounded-full transition-all"
+                onClick={() => upateDesignLikes(design._id)}
+              >
+                {user?._id && design.likesUsers.includes(user?._id) ? (
+                  <FaHeart className="text-red-500" />
+                ) : (
+                  <Heart className="size-5 text-red-500 hover:cursor-pointer" />
+                )}
+              </Button>
+              <span className="font-bold text-lg">{design.likesCount}</span>
             </div>
 
             <div className="flex items-center gap-2">
@@ -167,6 +182,7 @@ export default function DesignDetailsPage() {
                     </div>
                     {color}
                   </div>
+
                   <div className="flex items-center gap-5 justify-between">
                     <div className="flex items-center gap-3">
                       <Button variant="ghost" onClick={() => copyColor(hexToRgb(color))}>
@@ -176,6 +192,7 @@ export default function DesignDetailsPage() {
                     </div>
                     {hexToRgb(color)}
                   </div>
+
                   <div className="flex items-center gap-5 justify-between">
                     <div className="flex items-center gap-3">
                       <Button variant="ghost" onClick={() => copyColor(hexToHsl(color))}>
@@ -197,6 +214,7 @@ export default function DesignDetailsPage() {
                 <h2 className="text-2xl font-semibold">Gradients</h2>
                 <Badge variant="secondary">{design.gradients.length}</Badge>
               </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {design.gradients.map((gradient, i) => (
                   <div key={i} className="h-32 rounded-xl shadow-lg border" style={{ backgroundImage: gradient }} />

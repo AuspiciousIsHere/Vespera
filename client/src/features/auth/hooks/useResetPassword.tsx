@@ -1,11 +1,12 @@
-import { resetPassword } from "@/api/auth";
-import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
-import { useAuthStore } from "@/store/authStore";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
-export default function useResetPassword() {
+import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
+import { useAuthStore } from "@/store/authStore";
+import { resetPassword } from "@/api/auth";
+
+export function useResetPassword() {
   const navigate = useNavigate();
   const zustandLogin = useAuthStore((state) => state.login);
   const { handleError } = useToastErrorHandler();

@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import useSendEmailForgetPassword from "./hooks/useSendEmailForgetPassword";
+import { useSendEmailForgetPassword } from "./hooks/useSendEmailForgetPassword";
 import type { SendEmailForgetPasswordFormInputs } from "@/types/auth";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";

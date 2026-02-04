@@ -1,6 +1,7 @@
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import { ArrowUpDown, CircleCheck, CircleX, EllipsisVertical, Eye, Trash, UserRound } from "lucide-react";
+import { Link } from "react-router";
 import { useState } from "react";
 
 import {
@@ -21,17 +22,16 @@ import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import useDeleteUsers from "./hooks/useDeleteUsers";
 import TablePagination from "@/ui/TablePagination";
 import PageSpinner from "@/ui/PageSpinner";
 
-import useGetAllDesigns from "./hooks/useGetAllDesigns";
-import { DESIGN_IMAGE_URL, USER_IMAGE_URL } from "@/constant/constants";
+import { useGetAllDesigns } from "./hooks/useGetAllDesigns";
+import { DESIGN_IMAGE_URL } from "@/constant/constants";
 import { useDebounce } from "@/hooks/useDebounce";
 import type { Design } from "@/types/design";
 import type { User } from "@/types/user";
-import { Link } from "react-router";
 import ConfirmDeleteDesignDialog from "../design/ConfirmDeleteDesignDialog";
+import { useDeleteDesigns } from "./hooks/useDeleteDesigns";
 
 const designTableColumsn: ColumnDef<Design>[] = [
   {
@@ -61,7 +61,7 @@ const designTableColumsn: ColumnDef<Design>[] = [
       return (
         <div className="w-14 bg-secondary flex items-center justify-center">
           {designPicture && designPicture !== "default-user.png" ? (
-            <img src={`${DESIGN_IMAGE_URL}/${designPicture}`} alt={row.getValue("username")} className="" />
+            <img src={`${DESIGN_IMAGE_URL}/${designPicture}`} alt={row.getValue("name")} className="" />
           ) : (
             <UserRound className="size-7" />
           )}
@@ -79,7 +79,6 @@ const designTableColumsn: ColumnDef<Design>[] = [
     header: "Owner",
     cell: ({ row }) => {
       const user: User = row.getValue("owner");
-      console.log(user);
       return `${user.firstName} ${user.lastName}`;
     },
   },
@@ -100,9 +99,9 @@ const designTableColumsn: ColumnDef<Design>[] = [
     },
   },
   {
-    accessorKey: "likes",
+    accessorKey: "likesCount",
     header: "Likes",
-    cell: ({ row }) => row.getValue("likes"),
+    cell: ({ row }) => row.getValue("likesCount"),
   },
   {
     accessorKey: "ratingCount",
@@ -159,19 +158,19 @@ export default function ManageDesignsTable() {
 
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [sortBy, setSortBy] = useState<SortingState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const debounceSearchTerm = useDebounce(searchTerm, 1000);
+  const [searchDesignTerm, setSearchDesignTerm] = useState("");
+  const debounceSearchDesignTerm = useDebounce(searchDesignTerm, 1000);
 
-  const { isPending: isDeletingUsers, mutate: deleteUsers } = useDeleteUsers();
+  const { isPending: isDeletingDesigns, mutate: deleteDesigns } = useDeleteDesigns();
 
-  const getAllDesignsFilters = {
+  const designsFilters = {
     page: pageIndex + 1,
     pageSize,
-    search: debounceSearchTerm,
+    search: debounceSearchDesignTerm,
     sort: sortBy[0] ? `${sortBy[0]?.desc ? "-" : ""}${sortBy[0]?.id}` : "-createdAt",
   };
 
-  const { isPending: isGettingAllDesigns, data: designsData } = useGetAllDesigns(getAllDesignsFilters);
+  const { isPending: isGettingAllDesigns, data: designsData } = useGetAllDesigns(designsFilters);
 
   const table = useReactTable({
     data: designsData?.data ?? [],
@@ -195,12 +194,6 @@ export default function ManageDesignsTable() {
       pagination: { pageIndex, pageSize },
     },
   });
-
-  const activeUsersOptions = [
-    { label: "All", value: "all" },
-    { label: "Active", value: "active" },
-    { label: "Deactive", value: "deactive" },
-  ];
 
   if (isGettingAllDesigns) return <PageSpinner />;
 
@@ -231,16 +224,16 @@ export default function ManageDesignsTable() {
                     <Button
                       variant="destructive"
                       onClick={() =>
-                        deleteUsers(
+                        deleteDesigns(
                           table.getSelectedRowModel().rows.map((row) => row.original._id),
                           { onSuccess: () => table.toggleAllPageRowsSelected(false) }
                         )
                       }
-                      disabled={isDeletingUsers}
+                      disabled={isDeletingDesigns}
                     />
                   }
                 >
-                  {isDeletingUsers && <Spinner />}
+                  {isDeletingDesigns && <Spinner />}
                   Delete Users
                 </AlertDialogClose>
               </AlertDialogFooter>
@@ -248,27 +241,7 @@ export default function ManageDesignsTable() {
           </AlertDialog>
 
           {/* Global search input */}
-          <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search email, username or fullname" />
-
-          {/* user state filter */}
-          {/* <Select
-            items={activeUsersOptions}
-            aria-label="Select User State"
-            value={activeFilter}
-            // @ts-ignore
-            onValueChange={(item) => setActiveFilter(item)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectPopup>
-              {activeUsersOptions.map((item) => (
-                <SelectItem key={String(item.value)} value={item.value ?? ""}>
-                  {item.label}
-                </SelectItem>
-              ))}
-            </SelectPopup>
-          </Select> */}
+          <Input value={searchDesignTerm} onChange={(e) => setSearchDesignTerm(e.target.value)} placeholder="Search design name" />
         </div>
       </div>
 

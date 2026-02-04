@@ -7,8 +7,8 @@ import {
   AlertDialogPopup,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useDeleteAccount } from "./hooks/useDeleteAccount";
 import { Field, FieldLabel } from "@/components/ui/field";
-import useDeleteAccount from "./hooks/useDeleteAccount";
 import { DialogPanel } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/store/authStore";

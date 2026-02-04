@@ -5,7 +5,7 @@ import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
 import { useAuthStore } from "@/store/authStore";
 import { updateUserPassword } from "@/api/auth";
 
-export default function useUpdateUserPassword() {
+export function useUpdateUserPassword() {
   const { handleError } = useToastErrorHandler();
   const zustandLogin = useAuthStore((state) => state.login);
 

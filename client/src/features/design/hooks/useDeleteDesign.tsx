@@ -5,7 +5,7 @@ import { useToastErrorHandler } from "@/hooks/useToastErrorHandler";
 import { useAuthStore } from "@/store/authStore";
 import { deleteDesign } from "@/api/design";
 
-export default function useDeleteDesign(designID: string) {
+export function useDeleteDesign(designID: string) {
   const queryClient = useQueryClient();
   const { handleError } = useToastErrorHandler();
   const user = useAuthStore((state) => state.user);
