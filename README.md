@@ -24,7 +24,6 @@ Vespera is constructed using a robust, performant, and developer-friendly stack.
 - UI Framework React + TypeScript Component-driven architecture and strong typing for reliability.
 - Styling Tailwind CSS Utility-first approach for rapid, responsive, and maintainable design.
 - API Node.js (Express) High-performance, scalable backend for serving palette data and user accounts.
-- Data PostgreSQL & Firestore Relational integrity for user data; flexible real-time storage for dynamic palette sharing.
 
 ## 🚀 Getting Started
 
